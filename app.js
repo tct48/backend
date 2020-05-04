@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const User = require('./api/routes/user/user');
 
 mongoose.connect(
-    'mongodb+srv://ketar:' + process.env.MONGO_ATLAS_PW + '@pblgpshero-edm6u.mongodb.net/test?retryWrites=true&w=majority', {
+  'mongodb://ketar:d10m12y37@ds015478.mlab.com:15478/heroku_wctv7cvf', {
       useUnifiedTopology: true,
       useNewUrlParser: true
     })
