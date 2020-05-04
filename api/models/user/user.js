@@ -16,6 +16,9 @@ const schema = mongoose.Schema({
     type: String,
     required: true
   },
+  c_passwprd: {
+    type: String
+  },
   firstname: {
     type: String,
     required: true
