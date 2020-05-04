@@ -141,4 +141,21 @@ router.post('/signup', (req, res, next) => {
   })
 })
 
+// แก้ไขสมาชิก
+router.patch("/:_id", (req, res, next) => {
+  const _id = req.params._id;
+
+  User.update({
+    _id: _id
+  }, {
+    $set : req.body
+  })
+  .exec()
+  .then(() => {
+    res.status(200).json({
+      message: "แก้ไขข้อมูลสำเร็จ"
+    })
+  })
+})
+
 module.exports = router;
