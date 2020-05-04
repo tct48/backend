@@ -1,0 +1,7 @@
+{
+  "env": {
+      "MONGODB_URI" : "mongodb://heroku_gtz0lv8s:kqvkg5k0b2khacl1nebif9idqt@ds113000.mlab.com:13000/heroku_gtz0lv8s",
+      "MONGO_ATLAS_PW" : "d10m12y37",
+      "JWT_KEY" : "secret"
+  }
+}
