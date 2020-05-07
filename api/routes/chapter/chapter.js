@@ -13,6 +13,14 @@ router.get('/', (req, res, next) => {
   })
 })
 
+router.get('/:_id', (req, ers) => {
+  Chapter.find({_id:_id}.then(result=>{
+    return res.status(200).json({
+      result
+    })
+  }))
+})
+
 // เพิ่มแหล่งการเรียนรู้
 router.post('/', (req, res, next) => {  
   const chapter = new Chapter({
