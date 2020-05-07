@@ -15,7 +15,9 @@ router.get('/', (req, res, next) => {
 
 router.get('/:_id', (req, ers) => {
   const _id = req.params._id;
-  Chapter.find({_id:_id}.then(result=>{
+  Chapter.find({_id:_id}
+    .exec()
+    .then(result=>{
     return res.status(200).json({
       result
     })
