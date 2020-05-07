@@ -25,7 +25,7 @@ router.get('/:_id', (req, ers) => {
 router.post('/', (req, res, next) => {  
   const chapter = new Chapter({
     _id: new mongoose.Types.ObjectId(),
-    name : req.body.name,
+    name : req.body.name, 
     title: req.body.title,
     quiz: req.body.quiz,
     created: new Date
