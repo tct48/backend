@@ -5,9 +5,12 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const User = require('./api/routes/user/user');
+const Chapter = require('./api/routes/chapter/chapter');
+const Quiz = require('./api/routes/quiz/quiz');
 
-mongoose.connect(
-  'mongodb://ketar:d10m12y37@ds015478.mlab.com:15478/heroku_wctv7cvf', {
+
+// connect database
+mongoose.connect('mongodb://ketar:d10m12y37@ds015478.mlab.com:15478/heroku_wctv7cvf', {
       useUnifiedTopology: true,
       useNewUrlParser: true
     })
@@ -40,6 +43,8 @@ app.use(function (req, res, next){
 })
 
 app.use("/user", User);
+app.use("/chapter",Chapter);
+app.use("/quiz", Quiz);
 
 // กรณีหา Route ไม่เจอ Set Error
 app.use((req, res, next)=>{

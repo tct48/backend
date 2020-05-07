@@ -42,7 +42,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/leaderboard', (req, res, next)=>{
-  User.find().limit(5)
+  User.find({"exp" : 0}).limit(5)
   .sort({
     exp:0
   })
@@ -157,5 +157,20 @@ router.patch("/:_id", (req, res, next) => {
     })
   })
 })
+
+// ลบข้อมูลสมาชิก
+router.delete("/:_id", (req, res, next) => {
+  const _id = req.params._id;
+  User.remove({
+    _id: _id,
+  })
+    .exec()
+    .then(() => {
+      res.status(200).json({
+        message: "User is deleted",
+      });
+    });
+});
+
 
 module.exports = router;
