@@ -42,10 +42,8 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/leaderboard', (req, res, next)=>{
-  User.find({"exp" : 0}).limit(5)
-  .sort({
-    exp:0
-  })
+  User.find().limit(5)
+  .sort({exp:-1})
   .then(items => {
     return res.status(200).json({
       total_items: items.length,
