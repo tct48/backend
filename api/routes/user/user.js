@@ -134,7 +134,7 @@ router.post("/login", (req, res, next) => {
 
         User.update(
           {
-            _id: _id,
+            _id: user[0]._id,
           },
           {
             activity: new Date(),
