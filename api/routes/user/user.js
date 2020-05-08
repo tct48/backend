@@ -236,7 +236,7 @@ router.patch("/:_id", (req, res, next) => {
       });
     });
 });
-
+ 
 // ลบข้อมูลสมาชิก
 router.delete("/:_id", (req, res, next) => {
   const _id = req.params._id;
