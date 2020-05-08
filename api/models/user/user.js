@@ -46,6 +46,10 @@ const schema = mongoose.Schema({
   role:{
     type:String,
     default:'student'
+  },
+  // last login
+  activity:{
+    type:Date
   }
 });
 

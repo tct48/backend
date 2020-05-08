@@ -58,10 +58,34 @@ router.get("/search", (req, res, next) => {
   var keyData = Object.keys(req.query)[2];
   var valueData = Object.values(req.query)[2];
 
+  // const users = User.find({
+  //   [keyData]: {
+  //     $regex: valueData,
+  //   },
+  //   role: "student",
+  // }).sort({ firstname: 0 });
+
   const user = User.find({
-    [keyData]: {
-      $regex: valueData,
-    },
+    $or: [
+      {
+        firstname: {
+          $regex: valueData,
+          $options: "ig",
+        },
+      },
+      {
+        lastname: {
+          $regex: valueData,
+          $options: "ig",
+        },
+      },
+      {
+        username: {
+          $regex: valueData,
+          $options: "ig",
+        },
+      },
+    ],
     role: "student",
   }).sort({ firstname: 0 });
 
@@ -107,6 +131,17 @@ router.post("/login", (req, res, next) => {
             message: "อีเมล์ หรือพาสเวิร์ดไม่ถูกต้อง",
           });
         }
+
+        User.update(
+          {
+            _id: _id,
+          },
+          {
+            activity: new Date(),
+          }
+        )
+          .exec()
+          .then(() => {});
 
         if (result) {
           const token = jwt.sign(
