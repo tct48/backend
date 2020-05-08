@@ -42,6 +42,13 @@ router.get("/", (req, res, next) => {
   });
 });
 
+router.get("/:_id", (req, res)=>{
+  const _id = req.params._id;
+  User.find({_id:_id}).then(UserLogin=>{
+    return res.status(200).json({UserLogin})
+  })
+})
+
 // ค้นหา
 router.get("/search", (req, res, next) => {
   if (!req.query["sp"] || !req.query["lp"]) {
