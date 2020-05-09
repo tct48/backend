@@ -3,8 +3,19 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const multer = require('multer');
+var cloudinary = require("cloudinary");
+
+cloudinary.config({
+  cloud_name: "hgflnfcwf",
+  api_key: "686937983637647",
+  api_secret: "8pkrtmO7kPQvre9o5wjOQopo-8A",
+});
+
 
 const User = require("../../models/user/user");
+
+const upload = multer({ storage: storage })
 
 var accessToken = null;
 
@@ -192,6 +203,17 @@ router.get("/data", (req, res, next) => {
   });
 });
 
+router.post("/upload_image", upload.single('file', (req, res, next)=> {
+  const file = req.file;
+  cloudinary.v2.uploader.upload(req.file, 
+  function(error, result) {
+      console.log(result, error)
+      res.status(200).json({
+          result
+      })
+  });
+}))
+
 // การสมัครสมาชิก
 router.post("/signup", (req, res, next) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -201,7 +223,6 @@ router.post("/signup", (req, res, next) => {
       });
     }
 
-    return console.log(req.body.image)
     const user = new User({
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,
