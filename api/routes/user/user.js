@@ -201,6 +201,7 @@ router.post("/signup", (req, res, next) => {
       });
     }
 
+    return console.log(req.body.image)
     const user = new User({
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,

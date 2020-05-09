@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const User = require('./api/routes/user/user');
 const Chapter = require('./api/routes/chapter/chapter');
 const Quiz = require('./api/routes/quiz/quiz');
+const File = require('./api/routes/file/file');
 
 
 // connect database
@@ -45,6 +46,7 @@ app.use(function (req, res, next){
 app.use("/user", User);
 app.use("/chapter",Chapter);
 app.use("/quiz", Quiz);
+app.use("/file", File);
 
 // กรณีหา Route ไม่เจอ Set Error
 app.use((req, res, next)=>{
