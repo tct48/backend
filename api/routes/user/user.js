@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 // const upload = multer({ dest: "/upload/" });
-const upload = multer({ dest: "uploads/" })
+const upload = multer({ dest: "uploads/image/user/" })
 const origin_path = require("path");
 var cloudinary = require("cloudinary");
 
