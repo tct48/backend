@@ -244,7 +244,12 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
         message: "สมัครสมาชิกเรียบร้อยแล้ว",
         created: result,
       });
-    });
+    })
+    .catch(err=>{
+      res.status(500).json({
+        message:err
+      })
+    })
   });
 });
 
