@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -29,6 +30,7 @@ app.use(morgan('dev'));
 app.unsubscribe(bodyParser.urlencoded({
   extended: true
 }));
+app.use(cors({origin:"*"}));
 app.use(bodyParser.json());
 
 app.use(function (req, res, next){
