@@ -3,7 +3,9 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const multer = require('multer');
+const multer = require("multer");
+const upload = multer({ dest: "/upload/" });
+const origin_path = require("path");
 var cloudinary = require("cloudinary");
 
 cloudinary.config({
@@ -12,10 +14,7 @@ cloudinary.config({
   api_secret: "8pkrtmO7kPQvre9o5wjOQopo-8A",
 });
 
-
 const User = require("../../models/user/user");
-
-const upload = multer({ storage: storage })
 
 var accessToken = null;
 
@@ -54,16 +53,15 @@ router.get("/", (req, res, next) => {
 });
 
 // ค้นหา by ID
-router.get('/userid/:_id', (req, res, next)=>{
+router.get("/userid/:_id", (req, res, next) => {
   const _id = req.params._id;
-  User.find({_id:_id}).then(items => {
+  User.find({ _id: _id }).then((items) => {
     return res.status(200).json({
       total_items: items.length,
-      items:items
-    })
-  })
-})
-
+      items: items,
+    });
+  });
+});
 
 // ค้นหา
 router.get("/search", (req, res, next) => {
@@ -203,27 +201,16 @@ router.get("/data", (req, res, next) => {
   });
 });
 
-router.post("/upload_image", upload.single('file', (req, res, next)=> {
-  const file = req.file;
-  cloudinary.v2.uploader.upload(req.file, 
-  function(error, result) {
-      console.log(result, error)
-      res.status(200).json({
-          result
-      })
-  });
-}))
-
 // การสมัครสมาชิก
-router.post("/signup", (req, res, next) => {
+router.post("/signup", upload.single("file"), (req, res, next) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {
     if (err) {
       return res.status(500).json({
         error: err.message,
       });
     }
-
-    const user = new User({
+    var user;
+    user = new User({
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,
       sid: req.body.sid,
@@ -234,6 +221,23 @@ router.post("/signup", (req, res, next) => {
       phone: req.body.phone,
     });
 
+    if(req.body.image){
+      user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        email: req.body.email,
+        sid: req.body.sid,
+        password: hash,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        username: req.body.username,
+        phone: req.body.phone,
+        image: req.body.image
+      });
+    }
+    
+
+
+
     user.save().then((result) => {
       res.status(200).json({
         message: "สมัครสมาชิกเรียบร้อยแล้ว",
@@ -241,6 +245,35 @@ router.post("/signup", (req, res, next) => {
       });
     });
   });
+});
+
+// การอัพโหลดภาพขึ้น cloudinary
+router.post("/uploadImage", upload.single("file"), (req, res, next) => {
+  var data;
+  data = req.file.destination + req.file.filename;
+  console.log(req.file);
+  cloudinary.v2.uploader.upload(
+    data,
+    {
+      unique_filename: true,
+      folder: "user/image/",
+    },
+    function (error, result) {
+      if (error) {
+        console.log("*** Error ***");
+        return res.status(200).json({
+          code: "error",
+          message: error,
+        });
+      }
+      if (result) {
+        console.log("*** Upload ***");
+        return res.status(200).json({
+          public_id: result.public_id,
+        });
+      }
+    }
+  );
 });
 
 // แก้ไขสมาชิก
@@ -262,7 +295,7 @@ router.patch("/:_id", (req, res, next) => {
       });
     });
 });
- 
+
 // ลบข้อมูลสมาชิก
 router.delete("/:_id", (req, res, next) => {
   const _id = req.params._id;

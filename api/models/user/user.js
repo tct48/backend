@@ -50,6 +50,9 @@ const schema = mongoose.Schema({
   // last login
   activity:{
     type:Date
+  },
+  image:{
+    type:String
   }
 });
 
