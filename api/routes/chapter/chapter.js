@@ -5,7 +5,10 @@ const Chapter = require("../../models/chapter/chapter");
 
 // เรียกดู Chapter ทั้งหมด
 router.get("/", (req, res, next) => {
-  Chapter.find({}).then((result) => {
+  Chapter.find({})
+  .select("_id name")
+  .sort({ name : 0 })
+  .then((result) => {
     return res.status(200).json({
       total_items: result.length,
       items: result,
@@ -28,7 +31,9 @@ router.post("/", (req, res, next) => {
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     title: req.body.title,
-    quiz: req.body.quiz,
+    text: req.body.text,
+    url: req.body.url,
+    quiz: 0,
     created: new Date(),
   });
 
