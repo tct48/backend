@@ -10,7 +10,7 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   host: "https://backend-pblgps.herokuapp.com",
   secureConnection: false,
-  port: 587,
+  port: 25,
   tls: {
     ciphers: "SSLv3",
   },
