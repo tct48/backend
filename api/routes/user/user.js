@@ -336,7 +336,7 @@ router.post("/changePassword", (req, res, next) => {
     from: "tar_solo@outlook.co.th",
     to: email,
     subject: "Change Password for PBLGPS-HERO",
-    html: "<b>Your new password is = " + new_password + "</b>",
+    html: "<h3>PBLGPS-HERO</h3><br><h4>Change Password</h4><b>Your new password is = " + new_password + "</br>",
   };
 
   User.find({ email: email }).select("_id").then((result) => {
@@ -369,11 +369,6 @@ router.post("/changePassword", (req, res, next) => {
             message: "กรุณาตรวจสอบข้อความใน Email ของท่าน",
             new_password: password[rnd_number],
           });
-        });
-
-        return res.status(200).json({
-          message: "กรุณาตรวจสอบใน Email ของท่าน",
-          // new_password: password[rnd_number],
         });
       })
     })
