@@ -8,6 +8,12 @@ const upload = multer({ dest: "uploads/image/user/" });
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
+  host: "https://backend-pblgps.herokuapp.com",
+  secureConnection: false,
+  port: 587,
+  tls: {
+    ciphers: "SSLv3",
+  },
   service: "hotmail",
   auth: {
     user: "tar_solo@outlook.co.th",
