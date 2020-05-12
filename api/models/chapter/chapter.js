@@ -5,6 +5,7 @@ const schema = mongoose.Schema({
   name: { type: String, required: true },
   title: {type: Object, required: true},
   text: {type: Object, required: true},
+  file: {type: Object, required: true},
   url: {type: Object, required: true},
   quiz: { type: Number, default: 0},
   created: { type: Date, required: true },

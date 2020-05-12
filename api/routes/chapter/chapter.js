@@ -32,6 +32,7 @@ router.post("/", (req, res, next) => {
     name: req.body.name,
     title: req.body.title,
     text: req.body.text,
+    file: req.body.file,
     url: req.body.url,
     quiz: 0,
     created: new Date(),
