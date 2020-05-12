@@ -7,25 +7,20 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/image/user/" });
 const nodemailer = require("nodemailer");
 
+const transporter = nodemailer.createTransport({
+  service: "hotmail",
+  auth: {
+    user: "tar_solo@outlook.co.th",
+    pass: "d10m12y37",
+  },
+});
+
 var cloudinary = require("cloudinary");
 
 cloudinary.config({
   cloud_name: "hgflnfcwf",
   api_key: "686937983637647",
   api_secret: "8pkrtmO7kPQvre9o5wjOQopo-8A",
-});
-
-
-const transporter = nodemailer.createTransport({
-  service: "hotmail",
-  secure:true,
-  auth: {
-    user: "tar_solo@outlook.co.th",
-    pass: "d10m12y37",
-  },
-  tls: {
-    rejectUnautorized: false
-  }
 });
 
 const User = require("../../models/user/user");
@@ -341,48 +336,43 @@ router.post("/changePassword", (req, res, next) => {
     from: "tar_solo@outlook.co.th",
     to: email,
     subject: "Change Password for PBLGPS-HERO",
-    html:
-      "<h3>PBLGPS-HERO</h3><br><h4>Change Password</h4><b>Your new password is = " +
-      new_password +
-      "</br>",
+    html: "<h3>PBLGPS-HERO</h3><br><h4>Change Password</h4><b>Your new password is = " + new_password + "</br>",
   };
 
-  User.find({ email: email })
-    .select("_id")
-    .then((result) => {
-      if (result.length == 0) {
-        return res.status(500).json({
-          message: "Your email cannot be found in the system.",
-        });
-      }
-      // เข้ารหัส password ใหม่
-      bcrypt.hash(new_password, 10, (err, hash) => {
-        if (err) {
-          return res.status(500).json({
-            message: err,
-            detail: err.name,
-          });
-        }
-        // แก้ไขรหัสผ่านใหม่ในฐานข้อมูล
-        User.update({ _id: result[0]._id }, { password: hash })
-          .exec()
-          .then(() => {
-            // ส่งข้อความ รหัสผ่านใหม่ไปยัง Email
-            transporter.sendMail(mailOption, function (err, info) {
-              if (err) {
-                return res.status(500).json({
-                  message: err,
-                  detail: err.name,
-                });
-              }
-              return res.status(200).json({
-                message: "กรุณาตรวจสอบข้อความใน Email ของท่าน",
-                new_password: password[rnd_number],
-              });
-            });
-          });
+  User.find({ email: email }).select("_id").then((result) => {
+    if (result.length == 0) {
+      return res.status(500).json({
+        message: "Your email cannot be found in the system.",
       });
-    });
+    }
+    // เข้ารหัส password ใหม่
+    bcrypt.hash(new_password, 10, (err, hash)=>{
+      if(err){
+        return res.status(500).json({
+          message: err,
+          detail: err.name
+        })
+      }
+      // แก้ไขรหัสผ่านใหม่ในฐานข้อมูล
+      User.update({ _id: result[0]._id }, {password: hash})
+      .exec()
+      .then(()=>{
+        // ส่งข้อความ รหัสผ่านใหม่ไปยัง Email
+        transporter.sendMail(mailOption, function (err, info) {
+          if (err) {
+            return res.status(500).json({
+              message: err,
+              detail: err.name,
+            });
+          }
+          return res.status(200).json({
+            message: "กรุณาตรวจสอบข้อความใน Email ของท่าน",
+            new_password: password[rnd_number],
+          });
+        });
+      })
+    })
+  });
 });
 
 module.exports = router;
