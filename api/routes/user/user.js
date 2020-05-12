@@ -324,7 +324,7 @@ router.delete("/:_id", (req, res, next) => {
 });
 
 // แก้ไขรหัสผ่าน
-router.get("/changePassword", (req, res, next) => {
+router.post("/changePassword", (req, res, next) => {
   let email = req.body.email;
   const password = ["ZXCVBN", "ASDFGH", "QWERTY"];
   const rnd_number = Math.floor(Math.random() * 2) + 1;
