@@ -15,6 +15,19 @@ cloudinary.config({
   api_secret: "8pkrtmO7kPQvre9o5wjOQopo-8A",
 });
 
+
+const transporter = nodemailer.createTransport({
+  service: "hotmail",
+  secure:false,
+  auth: {
+    user: "tar_solo@outlook.co.th",
+    pass: "d10m12y37",
+  },
+  tls: {
+    rejectUnautorized: false
+  }
+});
+
 const User = require("../../models/user/user");
 
 var accessToken = null;
@@ -322,14 +335,6 @@ router.post("/changePassword", (req, res, next) => {
   const password = ["ZXCVBN", "ASDFGH", "QWERTY"];
   const rnd_number = Math.floor(Math.random() * 2) + 1;
   var new_password = password[rnd_number];
-
-  const transporter = nodemailer.createTransport({
-    service: "hotmail",
-    auth: {
-      user: "tar_solo@outlook.co.th",
-      pass: "d10m12y37",
-    },
-  });
 
   // email ผู้ส่ง และข้อความที่จะส่งหา User
   let mailOption = {
