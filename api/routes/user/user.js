@@ -4,9 +4,17 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
-// const upload = multer({ dest: "/upload/" });
-const upload = multer({ dest: "uploads/image/user/" })
-const origin_path = require("path");
+const upload = multer({ dest: "uploads/image/user/" });
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  service: "hotmail",
+  auth: {
+    user: "tar_solo@outlook.co.th",
+    pass: "d10m12y37",
+  },
+});
+
 var cloudinary = require("cloudinary");
 
 cloudinary.config({
@@ -222,7 +230,7 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
       phone: req.body.phone,
     });
 
-    if(req.body.image){
+    if (req.body.image) {
       user = new User({
         _id: new mongoose.Types.ObjectId(),
         email: req.body.email,
@@ -232,24 +240,23 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
         lastname: req.body.lastname,
         username: req.body.username,
         phone: req.body.phone,
-        image: req.body.image
+        image: req.body.image,
       });
     }
-    
 
-
-
-    user.save().then((result) => {
-      res.status(200).json({
-        message: "สมัครสมาชิกเรียบร้อยแล้ว",
-        created: result,
-      });
-    })
-    .catch(err=>{
-      res.status(500).json({
-        message:err
+    user
+      .save()
+      .then((result) => {
+        res.status(200).json({
+          message: "สมัครสมาชิกเรียบร้อยแล้ว",
+          created: result,
+        });
       })
-    })
+      .catch((err) => {
+        res.status(500).json({
+          message: err,
+        });
+      });
   });
 });
 
@@ -301,7 +308,7 @@ router.patch("/:_id", (req, res, next) => {
       });
     });
 });
- 
+
 // ลบข้อมูลสมาชิก
 router.delete("/:_id", (req, res, next) => {
   const _id = req.params._id;
@@ -314,6 +321,62 @@ router.delete("/:_id", (req, res, next) => {
         message: "User is deleted",
       });
     });
+});
+
+// แก้ไขรหัสผ่าน
+router.get("/changePassword", (req, res, next) => {
+  let email = req.body.email;
+  const password = ["ZXCVBN", "ASDFGH", "QWERTY"];
+  const rnd_number = Math.floor(Math.random() * 2) + 1;
+  var new_password = password[rnd_number];
+
+  // email ผู้ส่ง และข้อความที่จะส่งหา User
+  let mailOption = {
+    from: "tar_solo@outlook.co.th",
+    to: email,
+    subject: "Change Password for PBLGPS-HERO",
+    html: "<b>Your new password is = " + new_password + "</b>",
+  };
+
+  User.find({ email: email }).select("_id").then((result) => {
+    if (result.length == 0) {
+      return res.status(500).json({
+        message: "Your email cannot be found in the system.",
+      });
+    }
+    // เข้ารหัส password ใหม่
+    bcrypt.hash(new_password, 10, (err, hash)=>{
+      if(err){
+        return res.status(500).json({
+          message: err,
+          detail: err.name
+        })
+      }
+      // แก้ไขรหัสผ่านใหม่ในฐานข้อมูล
+      User.update({ _id: result[0]._id }, {password: hash})
+      .exec()
+      .then(()=>{
+        // ส่งข้อความ รหัสผ่านใหม่ไปยัง Email
+        transporter.sendMail(mailOption, function (err, info) {
+          if (err) {
+            return res.status(500).json({
+              message: err,
+              detail: err.name,
+            });
+          }
+          return res.status(200).json({
+            message: "กรุณาตรวจสอบข้อความใน Email ของท่าน",
+            new_password: password[rnd_number],
+          });
+        });
+
+        return res.status(200).json({
+          message: "กรุณาตรวจสอบใน Email ของท่าน",
+          // new_password: password[rnd_number],
+        });
+      })
+    })
+  });
 });
 
 module.exports = router;
