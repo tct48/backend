@@ -18,7 +18,7 @@ cloudinary.config({
 
 const transporter = nodemailer.createTransport({
   service: "hotmail",
-  secure:false,
+  secure:true,
   auth: {
     user: "tar_solo@outlook.co.th",
     pass: "d10m12y37",
