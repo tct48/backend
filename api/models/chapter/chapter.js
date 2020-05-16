@@ -6,8 +6,8 @@ const schema = mongoose.Schema({
   pdf: {type: Object, required: true},
   youtube: {type: Object, required: true},
   hypertext: {type: Object, required: true},
-  quiz: {type:Number, default:0},
-  created: new Date(),
+  quiz: {type:Number},
+  created: {type : Date},
 });
 
 const Chapter = mongoose.model("Chapter", schema);

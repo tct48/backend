@@ -30,9 +30,9 @@ router.post("/", (req, res, next) => {
   const chapter = new Chapter({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
-    pdf: req.body.title, 
-    youtube: req.body.text,
-    hypertext: req.body.file,
+    pdf: req.body.pdf, 
+    youtube: req.body.youtube,
+    hypertext: req.body.hypertext,
     quiz: 0,
     created: new Date(),
   });
