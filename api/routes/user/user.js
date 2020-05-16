@@ -336,17 +336,17 @@ router.delete("/:_id", (req, res, next) => {
 
 // แก้ไขรหัสผ่าน
 router.post("/changePassword", (req, res, next) => {
-  var email = req.body.email;
+  var username = req.body.username;
   var old_password = req.body.old_password;
   var new_password = req.body.new_password;
 
   User.find({
-      email: email
+      username: username
     })
     .then((user) => {
       if (user.length == 0) {
         return res.status(500).json({
-          message: "Your email cannot be found in the system.",
+          message: "Your username cannot be found in the system.",
         });
       }
       const userId = user[0]._id;
