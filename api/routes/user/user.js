@@ -335,77 +335,47 @@ router.delete("/:_id", (req, res, next) => {
 });
 
 // แก้ไขรหัสผ่าน
-router.post("/forgetPassword", (req, res, next) => {
+router.post("/changePassword", (req, res, next) => {
   var email = req.body.email;
-  console.log(email);
-  const password = ["ZXCVBN", "ASDFGH", "QWERTY"];
-  const rnd_number = Math.floor(Math.random() * 2) + 1;
-  var new_password = password[rnd_number];
-
-  // email ผู้ส่ง และข้อความที่จะส่งหา User
-  // let mailOption = {
-  //   from: "tar_solo@outlook.co.th",
-  //   to: email,
-  //   subject: "Change Password for PBLGPS-HERO",
-  //   html:
-  //     "<h3>PBLGPS-HERO</h3><br><h4>Change Password</h4><b>Your new password is = " +
-  //     new_password +
-  //     "</br>",
-  // };
+  var old_password = req.body.old_password;
+  var new_password = req.body.new_password;
 
   User.find({
       email: email
     })
-    .select("_id")
-    .then((result) => {
-      if (result.length == 0) {
+    .then((user) => {
+      if (user.length == 0) {
         return res.status(500).json({
           message: "Your email cannot be found in the system.",
         });
       }
-      // เข้ารหัส password ใหม่
-      bcrypt.hash(new_password, 10, (err, hash) => {
-        if (err) {
+      const userId = user[0]._id;
+      const password_in_db = user[0].password;
+      // console.log(user);
+      bcrypt.compare(old_password, password_in_db, (err, result)=>{
+        if(err){
           return res.status(500).json({
-            message: err,
-            detail: err.name,
+            message:"รหัสผ่านเดิมไม่ถูกต้อง +"
           });
         }
-        // ส่งข้อความ รหัสผ่านใหม่ไปยัง Email
-        nodeoutlook.sendEmail({
-          auth: {
-            user: "tar_solo@outlook.co.th",
-            pass: "d10m12y37"
-          },
-          from: "tar_solo@outlook.co.th",
-          to: email,
-          subject: "Change Password for PBLGPS-HERO",
-          html: "<h3>PBLGPS-HERO</h3><br><h4>Change Password</h4><b>Your new password is = " +
-            new_password +
-            "</br>",
-          onError: (e) => {
+        
+        bcrypt.hash(new_password, 10, (err, hash) => {
+          if (err) {
             return res.status(500).json({
-              message: err,
-              detail: err.name,
+              error: err
             });
-          },
-          onSuccess: (i) => {
-            // แก้ไขรหัสผ่านใหม่ในฐานข้อมูล
-            User.update({
-                _id: result[0]._id
-              }, {
-                password: hash
-              })
-              .exec()
-              .then(() => {
-                return res.status(200).json({
-                  message: "กรุณาตรวจสอบข้อความใน Email ของท่าน",
-                  new_password: password[rnd_number],
-                });
-              });
           }
-        });
-      });
+          User.update({
+            _id:userId
+          }, {
+            password: hash
+          })
+          .exec()
+          .then(res.status(200).json({
+            message: "แก้ไขรหัสผ่านเรียบร้อยแล้ว!"
+          }))
+        })
+      })
     });
 });
 
