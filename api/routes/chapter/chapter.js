@@ -25,12 +25,12 @@ router.get("/:_id", (req, res) => {
   });
 });
 
-// เพิ่มแหล่งการเรียนรู้
+// เพิ่มแหล่งการเรียนรู้ test
 router.post("/", (req, res, next) => {
   const chapter = new Chapter({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
-    pdf: req.body.title,
+    pdf: req.body.title, 
     youtube: req.body.text,
     hypertext: req.body.file,
     quiz: 0,
