@@ -4,8 +4,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/image/user/" });
+const upload = multer({
+  dest: "uploads/image/user/"
+});
 const nodemailer = require("nodemailer");
+var nodeoutlook = require('nodejs-nodemailer-outlook')
 
 const transporter = nodemailer.createTransport({
   host: "https://backend-pblgps.herokuapp.com",
@@ -46,7 +49,11 @@ router.get("/", (req, res, next) => {
   var lp = Object.values(req.query["lp"]);
   var skip = sp * lp;
 
-  const user = User.find({ role: "student" }).sort({ firstname: 0 });
+  const user = User.find({
+    role: "student"
+  }).sort({
+    firstname: 0
+  });
 
   user.then((result) => {
     const totalItem = result.length;
@@ -70,7 +77,9 @@ router.get("/", (req, res, next) => {
 // ค้นหา by ID
 router.get("/userid/:_id", (req, res, next) => {
   const _id = req.params._id;
-  User.find({ _id: _id }).then((items) => {
+  User.find({
+    _id: _id
+  }).then((items) => {
     return res.status(200).json({
       total_items: items.length,
       items: items,
@@ -94,8 +103,7 @@ router.get("/search", (req, res, next) => {
   var valueData = Object.values(req.query)[2];
 
   const user = User.find({
-    $or: [
-      {
+    $or: [{
         firstname: {
           $regex: valueData,
           $options: "ig",
@@ -115,7 +123,9 @@ router.get("/search", (req, res, next) => {
       },
     ],
     role: "student",
-  }).sort({ firstname: 0 });
+  }).sort({
+    firstname: 0
+  });
 
   user
     .skip(Number(skip))
@@ -135,9 +145,13 @@ router.get("/search", (req, res, next) => {
 
 // leaderboard only student
 router.get("/leaderboard", (req, res, next) => {
-  User.find({ role: "student" })
+  User.find({
+      role: "student"
+    })
     .limit(5)
-    .sort({ exp: -1 })
+    .sort({
+      exp: -1
+    })
     .then((items) => {
       return res.status(200).json({
         total_items: items.length,
@@ -149,8 +163,8 @@ router.get("/leaderboard", (req, res, next) => {
 // การล๊อกอิน
 router.post("/login", (req, res, next) => {
   User.find({
-    username: req.body.username,
-  })
+      username: req.body.username,
+    })
     .exec()
     .then((user) => {
       bcrypt.compare(req.body.password, user[0].password, (err, result) => {
@@ -160,25 +174,20 @@ router.post("/login", (req, res, next) => {
           });
         }
 
-        User.update(
-          {
+        User.update({
             _id: user[0]._id,
-          },
-          {
+          }, {
             activity: new Date(),
-          }
-        )
+          })
           .exec()
           .then(() => {});
 
         if (result) {
-          const token = jwt.sign(
-            {
+          const token = jwt.sign({
               username: user[0].username,
               userId: user[0]._id,
             },
-            process.env.JWT_KEY,
-            {
+            process.env.JWT_KEY, {
               expiresIn: "24h",
             }
           );
@@ -207,8 +216,8 @@ router.get("/data", (req, res, next) => {
   jwt.verify(accessToken, process.env.JWT_KEY, function (error, decodedToken) {
     const userId = decodedToken.userId;
     return User.findById({
-      _id: userId,
-    })
+        _id: userId,
+      })
       .populate("academy")
       .then((UserLogin) => {
         return res.status(200).json(UserLogin);
@@ -272,8 +281,7 @@ router.post("/uploadImage", upload.single("file"), (req, res, next) => {
   data = req.file.destination + req.file.filename;
   console.log(req.file);
   cloudinary.v2.uploader.upload(
-    data,
-    {
+    data, {
       unique_filename: true,
       folder: "user/image/",
     },
@@ -299,14 +307,11 @@ router.post("/uploadImage", upload.single("file"), (req, res, next) => {
 router.patch("/:_id", (req, res, next) => {
   const _id = req.params._id;
 
-  User.update(
-    {
+  User.update({
       _id: _id,
-    },
-    {
+    }, {
       $set: req.body,
-    }
-  )
+    })
     .exec()
     .then(() => {
       res.status(200).json({
@@ -319,8 +324,8 @@ router.patch("/:_id", (req, res, next) => {
 router.delete("/:_id", (req, res, next) => {
   const _id = req.params._id;
   User.remove({
-    _id: _id,
-  })
+      _id: _id,
+    })
     .exec()
     .then(() => {
       res.status(200).json({
@@ -330,7 +335,7 @@ router.delete("/:_id", (req, res, next) => {
 });
 
 // แก้ไขรหัสผ่าน
-router.post("/changePassword", (req, res, next) => {
+router.post("/forgetPassword", (req, res, next) => {
   var email = req.body.email;
   console.log(email);
   const password = ["ZXCVBN", "ASDFGH", "QWERTY"];
@@ -338,17 +343,19 @@ router.post("/changePassword", (req, res, next) => {
   var new_password = password[rnd_number];
 
   // email ผู้ส่ง และข้อความที่จะส่งหา User
-  let mailOption = {
-    from: "tar_solo@outlook.co.th",
-    to: email,
-    subject: "Change Password for PBLGPS-HERO",
-    html:
-      "<h3>PBLGPS-HERO</h3><br><h4>Change Password</h4><b>Your new password is = " +
-      new_password +
-      "</br>",
-  };
+  // let mailOption = {
+  //   from: "tar_solo@outlook.co.th",
+  //   to: email,
+  //   subject: "Change Password for PBLGPS-HERO",
+  //   html:
+  //     "<h3>PBLGPS-HERO</h3><br><h4>Change Password</h4><b>Your new password is = " +
+  //     new_password +
+  //     "</br>",
+  // };
 
-  User.find({ email: email })
+  User.find({
+      email: email
+    })
     .select("_id")
     .then((result) => {
       if (result.length == 0) {
@@ -365,22 +372,38 @@ router.post("/changePassword", (req, res, next) => {
           });
         }
         // ส่งข้อความ รหัสผ่านใหม่ไปยัง Email
-        transporter.sendMail(mailOption, function (err, info) {
-          if (err) {
+        nodeoutlook.sendEmail({
+          auth: {
+            user: "tar_solo@outlook.co.th",
+            pass: "d10m12y37"
+          },
+          from: "tar_solo@outlook.co.th",
+          to: email,
+          subject: "Change Password for PBLGPS-HERO",
+          html: "<h3>PBLGPS-HERO</h3><br><h4>Change Password</h4><b>Your new password is = " +
+            new_password +
+            "</br>",
+          onError: (e) => {
             return res.status(500).json({
               message: err,
               detail: err.name,
             });
-          }
-          // แก้ไขรหัสผ่านใหม่ในฐานข้อมูล
-          User.update({ _id: result[0]._id }, { password: hash })
-            .exec()
-            .then(() => {
-              return res.status(200).json({
-                message: "กรุณาตรวจสอบข้อความใน Email ของท่าน",
-                new_password: password[rnd_number],
+          },
+          onSuccess: (i) => {
+            // แก้ไขรหัสผ่านใหม่ในฐานข้อมูล
+            User.update({
+                _id: result[0]._id
+              }, {
+                password: hash
+              })
+              .exec()
+              .then(() => {
+                return res.status(200).json({
+                  message: "กรุณาตรวจสอบข้อความใน Email ของท่าน",
+                  new_password: password[rnd_number],
+                });
               });
-            });
+          }
         });
       });
     });
