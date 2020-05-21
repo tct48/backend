@@ -18,11 +18,18 @@ router.get("/:_id", (req, res) => {
 router.get("/:_id/:ref", (req, res) => {
     const _id = req.params._id;
     const ref = req.params.ref;
-    Grade.findOne({ user: _id,ref: ref }).then(result => {
+    Grade.find({ user: _id,ref: ref }).then(result => {
       res.status(200).json({
+        total_items: result.length,
         item: result
       })
-    });
+    })
+    .catch(err=>{
+        res.status(404).json({
+            message: err
+        })
+    })
+    ;
   });
 
 // เพิ่มแหล่งการเรียนรู้ test
