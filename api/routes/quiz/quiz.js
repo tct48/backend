@@ -2,32 +2,33 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Chapter = require("../../models/chapter/chapter");
-const Grade = require("../../models/grade/grade");
+const Quiz = require("../../models/quiz/quiz");
 
 // เรียกดูข้อ ทั้งหมด ของ Chapter นั้น ๆ
 router.get("/:_id", (req, res, next) => {
     const _id = req.params._id
-    Grade.find({ ref: _id }).then((result) => {
+    Quiz.findOne({ ref: _id }).then((result) => {
     return res.status(200).json({
       total_items: result.choice.length,
-      items: result
+      items: result,
     });
   });
 });
 
 // เพิ่มแหล่งการเรียนรู้
 router.post("/", (req, res, next) => {
-  const grade = new Grade({
-    _id : new mongoose.Types.ObjectId(),
+  const quiz = new Quiz({
+    _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
-    score: req.body.score,
+    detail: req.body.detail,
+    choice: req.body.choice,
     ref: req.body.ref,
-    user: req.body.user,
-  }) 
+    created : new Date
+  });
 
-  grade.save().then(result=>{
+  quiz.save().then(result=>{
     res.status(200).json({
-      message: "บันทึกคะแนนลงในระบบเรียบร้อยแล้ว",
+      message: "เพิ่มหน่วยการเรียนรู้เรียบร้อยแล้ว",
       data: result,
     });
   })
@@ -36,13 +37,13 @@ router.post("/", (req, res, next) => {
 // ลบแหล่งการเรียนรู้
 router.delete("/:_id", (req, res, next) => {
   const _id = req.params._id;
-  Grade.remove({
+  Quiz.remove({
     _id: _id,
   })
     .exec()
     .then(() => {
       res.status(200).json({
-        message: "ลบรายการคะแนนเรียบร้อยแล้ว!",
+        message: "Quiz is deleted",
       });
     });
 });
