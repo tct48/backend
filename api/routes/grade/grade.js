@@ -21,7 +21,7 @@ router.get("/:_id/:ref", (req, res) => {
     Grade.find({ user: _id,ref: ref }).then(result => {
       res.status(200).json({
         total_items: result.length,
-        item: result
+        item: result[0]
       })
     })
     .catch(err=>{
