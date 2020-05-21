@@ -8,9 +8,10 @@ const Quiz = require("../../models/quiz/quiz");
 router.get("/:_id", (req, res, next) => {
     const _id = req.params._id
     Quiz.find({ ref: _id }).then((result) => {
+      console.log()
     return res.status(200).json({
-      total_items: result.length,
-      items: result,
+      total_items: result[0].choice.length,
+      items: result[0],
     });
   });
 });
