@@ -148,6 +148,7 @@ router.get("/leaderboard", (req, res, next) => {
   User.find({
       role: "student"
     })
+    .select("username exp badge")
     .limit(5)
     .sort({
       exp: -1

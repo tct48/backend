@@ -47,6 +47,9 @@ const schema = mongoose.Schema({
     type:String,
     default:'student'
   },
+  class:{
+    type: String,
+  },
   // last login
   activity:{
     type:Date
