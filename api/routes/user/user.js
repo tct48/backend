@@ -244,6 +244,7 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
       lastname: req.body.lastname,
       username: req.body.username,
       phone: req.body.phone,
+      class: req.body.class
     });
 
     if (req.body.image) {
