@@ -12,6 +12,7 @@ const Quiz = require('./api/routes/quiz/quiz');
 const File = require('./api/routes/file/file');
 const Exercise = require('./api/routes/exercise/exercise');
 const Grade = require('./api/routes/grade/grade');
+const Situation = require('./api/routes/quiz/situation');
 
 // connect database
 mongoose.connect('mongodb://ketar:d10m12y37@ds015478.mlab.com:15478/heroku_wctv7cvf', {
@@ -48,12 +49,13 @@ app.use(function (req, res, next){
 })
 
 app.use("/user", User);
-app.user("/attendence", Attendence);
+app.use("/attendence", Attendence);
 app.use("/chapter",Chapter);
 app.use("/quiz", Quiz);
 app.use("/file", File);
 app.use("/exercise", Exercise);
 app.use("/grade", Grade);
+app.use("/prps", Situation);
 
 // กรณีหา Route ไม่เจอ Set Error
 app.use((req, res, next)=>{

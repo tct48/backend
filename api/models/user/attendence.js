@@ -15,7 +15,7 @@ const schema = mongoose.Schema({
       required:true,
   },
   user:{
-      type:Object
+      type:Array
   }
 });
 
