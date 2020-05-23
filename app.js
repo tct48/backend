@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const User = require('./api/routes/user/user');
+const Attendence = require('./api/routes/user/attendence');
 const Chapter = require('./api/routes/chapter/chapter');
 const Quiz = require('./api/routes/quiz/quiz');
 const File = require('./api/routes/file/file');
@@ -47,6 +48,7 @@ app.use(function (req, res, next){
 })
 
 app.use("/user", User);
+app.user("/attendence", Attendence);
 app.use("/chapter",Chapter);
 app.use("/quiz", Quiz);
 app.use("/file", File);
