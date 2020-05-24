@@ -56,11 +56,12 @@ router.get("/", (req, res, next) => {
   });
 
 // return นักเรียนในห้องนี้ทั้งหมด
-router.get("/student", (req, res, next)=> {
+router.get("/student/:classroom", (req, res, next)=> {
+    const classroom = req.params.classroom;
+    console.log(classroom);
     const user = User.find({
-        class:req.body.classroom
+        class:classroom
     })
-
     user.then(result=>{
         return res.status(200).json({
             total_items: result.length,
@@ -93,7 +94,7 @@ router.delete("/:_id", (req, res, next) => {
     .exec()
     .then(() => {
       res.status(200).json({
-        message: "PrPs is deleted",
+        message: "ลบชั้นเรียนเรียบร้อยแล้ว !",
       });
     });
 });
