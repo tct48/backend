@@ -1,64 +1,64 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   sid: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   c_passwprd: {
-    type: String
+    type: String,
   },
   firstname: {
     type: String,
-    required: true
+    required: true,
   },
   lastname: {
     type: String,
-    required: true
+    required: true,
   },
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   phone: {
     type: String,
-    required: true
+    required: true,
   },
   exp: {
     type: Number,
-    default: 0
+    default: 0,
   },
   badge: {
-    type: Array
+    type: Array,
   },
-  role:{
-    type:String,
-    default:'student'
-  },
-  class:{
+  role: {
     type: String,
+    default: "student",
+  },
+  class: {
+    type: String
   },
   // last login
-  activity:{
-    type:Date
+  activity: {
+    type: Date,
   },
-  image:{
-    type:String
-  }
+  image: {
+    type: String,
+  },
 });
 
-const User = mongoose.model('User', schema);
+const User = mongoose.model("User", schema);
 
-module.exports = User
+module.exports = User;

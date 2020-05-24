@@ -13,6 +13,7 @@ const File = require('./api/routes/file/file');
 const Exercise = require('./api/routes/exercise/exercise');
 const Grade = require('./api/routes/grade/grade');
 const Situation = require('./api/routes/quiz/situation');
+const Classroom = require('./api/routes/user/classroom');
 
 // connect database
 mongoose.connect('mongodb://ketar:d10m12y37@ds015478.mlab.com:15478/heroku_wctv7cvf', {
@@ -56,6 +57,7 @@ app.use("/file", File);
 app.use("/exercise", Exercise);
 app.use("/grade", Grade);
 app.use("/prps", Situation);
+app.use("/classroom", Classroom);
 
 // กรณีหา Route ไม่เจอ Set Error
 app.use((req, res, next)=>{
