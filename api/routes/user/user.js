@@ -236,6 +236,9 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
       });
     }
     var user;
+
+    console.log(req.body)
+
     user = new User({
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,
@@ -259,6 +262,7 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
         username: req.body.username,
         phone: req.body.phone,
         image: req.body.image,
+        class: req.body.class
       });
     }
 
