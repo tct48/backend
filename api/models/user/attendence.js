@@ -6,6 +6,10 @@ const schema = mongoose.Schema({
     type: String,
     required: true,
   },
+  date: {
+    type:Date,
+    required:true
+  },
   created: {
     type: Date,
     required: true,

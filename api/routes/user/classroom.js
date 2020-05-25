@@ -65,7 +65,8 @@ router.get("/student/:classroom", (req, res, next) => {
   console.log(classroom);
   const user = User.find({
     class: classroom,
-  });
+  })
+  .select("firstname lastname phone")
   user.then((result) => {
     return res.status(200).json({
       total_items: result.length,

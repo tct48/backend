@@ -8,6 +8,7 @@ const Attendence = require("../../models/user/attendence");
 router.post("/", (req, res, next) => {
   const attendence = new Attendence({
     _id: new mongoose.Types.ObjectId(),
+    date: req.body.date,
     ref: req.body.ref, //class
     created: new Date(),
     status: req.body.status,
@@ -24,35 +25,29 @@ router.post("/", (req, res, next) => {
 
 // แสดงตารางวันที่เข้าเรียนทั้งหมดส่งปีการศึกษามาด้วย
 router.get("/", (req, res, next) => {
-  var sp = req.query["sp"];
-  var lp = req.query["lp"];
   var ref = req.query["ref"];
-  var skip = sp * lp;
   var total_items;
 
   const attendence = Attendence.find({
     ref: ref,
-  })
-  .sort({
-    created: 0,
+  }).sort({
+    date: 0,
   });
 
   attendence.then((result) => {
     total_items = result.length;
     attendence
-      .skip(Number(skip))
-      .limit(Number(lp))
       .then((item) => {
         return res.status(200).json({
           total_items: item.length,
           items: item,
         });
       })
-      .catch(err=>{
-          return res.status(500).json({
-              message:err.message
-          })
-      })
+      .catch((err) => {
+        return res.status(500).json({
+          message: err.message,
+        });
+      });
   });
 });
 
@@ -60,7 +55,7 @@ router.get("/", (req, res, next) => {
 router.get("/:user", (req, res, next) => {
   const _id = req.params.user;
   Attendence.find({
-    user: { $elemMatch : { $eq : _id } },
+    user: { $elemMatch: { $eq: _id } },
   }).then((result) => {
     return res.status(200).json({
       total_items: result.length,
@@ -71,22 +66,36 @@ router.get("/:user", (req, res, next) => {
 
 // นักเรียนลงชื่อเข้าเรียน
 router.patch("/:_id", (req, res, next) => {
-    const _id = req.params._id;
-    const user = req.body.user;
+  const _id = req.params._id;
+  const user = req.body.user;
 
-    Attendence.update({
-        _id:_id
-    },
-    {
-        $push: { user : user }
-    })
-    .exec()
-    .then(()=>{
+  Attendence.find({
+    _id: _id,
+    user: { $elemMatch: { $eq: user } },
+  }).then((result) => {
+    if (result.length > 0) {
+      return res.status(200).json({
+        code: "500",
+        message: "มึงมาเรียนแล้ว",
+      });
+    }
+
+    Attendence.update(
+      {
+        _id: _id,
+      },
+      {
+        $push: { user: user },
+      }
+    )
+      .exec()
+      .then(() => {
         res.status(200).json({
-            message: "ลงชื่อเข้าเรียนสำเร็จ"
-        })
-    })
-})
+          message: "ลงชื่อเข้าเรียนสำเร็จ",
+        });
+      });
+  });
+});
 
 // แก้สถานะการเข้าห้องเรียน
 router.patch("/switch/:_id", (req, res, next) => {
