@@ -27,7 +27,7 @@ router.post("/", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
   const _id = req.params.id;
   PrPs.find({
-    _id: _id,
+    ref: _id,
   }).then((result) => {
     return res.status(200).json({
       total_items: result.length,
