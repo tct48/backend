@@ -12,7 +12,7 @@ router.post("/", (req, res, next) => {
     ref: req.body.ref, //class
     created: new Date(),
     situation: req.body.situation,
-    choice: req.body.choice,
+    question: req.body.question,
   });
 
   prps.save().then((result) => {
