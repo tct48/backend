@@ -2,10 +2,11 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  situation: { type: Array, required: true },
-  choice: { type: Object, required: true },
-  ref: { type: String },
+  situation: { type: String, required: true },
+  questions: { type: Array, required: true },
+  answers: { type: Object, required: true },
   created: { type: Date, required: true },
+  ref: { type : String, required:true}
 });
 
 const PrPs = mongoose.model("PrPs", schema);

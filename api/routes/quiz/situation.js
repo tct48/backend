@@ -9,10 +9,11 @@ const PrPs = require("../../models/quiz/situation");
 router.post("/", (req, res, next) => {
   const prps = new PrPs({
     _id: new mongoose.Types.ObjectId(),
-    ref: req.body.ref, //class
-    created: new Date(),
     situation: req.body.situation,
-    choice: req.body.choice,
+    questions: req.body.questions,
+    answers: req.body.answers,
+    ref: req.body.ref, //PRE || POST PRPS
+    created: new Date(),
   });
 
   prps.save().then((result) => {
