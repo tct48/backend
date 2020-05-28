@@ -25,11 +25,13 @@ router.post("/", (req, res, next) => {
 });
 
 // เรียกทำแบบทดสอบกี่ข้ออะไรบ้าง
-router.get("/:id", (req, res, next) => {
-  const _id = req.params.id;
+router.get("/:ref", (req, res, next) => {
+  const ref = req.params.ref;
   PrPs.find({
-    ref: _id,
-  }).then((result) => {
+    ref: ref,
+  })
+  .limit(10)
+  .then((result) => {
     return res.status(200).json({
       total_items: result.length,
       items: result,
