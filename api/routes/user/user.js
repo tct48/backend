@@ -327,6 +327,24 @@ router.patch("/:_id", (req, res, next) => {
     });
 });
 
+// การเพิ่ม exp
+router.patch("/exp/:_id", (req, res, next)=> {
+  const _id = req.params._id;
+  const obtainExp = req.body.exp;
+
+  User.findOneAndUpdate({
+    _id: _id
+  },{
+    $inc:{exp:obtainExp}
+  })
+  .exec()
+  .then(()=>{
+    res.status(200).json({
+      message: "คุณได้รับ Exp เพิ่มขึ้น " + obtainExp + " Exp"
+    })
+  })
+})
+
 // ลบข้อมูลสมาชิก
 router.delete("/:_id", (req, res, next) => {
   const _id = req.params._id;

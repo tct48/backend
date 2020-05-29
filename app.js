@@ -13,6 +13,7 @@ const File = require('./api/routes/file/file');
 const Exercise = require('./api/routes/exercise/exercise');
 const Grade = require('./api/routes/grade/grade');
 const Situation = require('./api/routes/quiz/situation');
+const Guild = require('./api/routes/user/guild');
 const Classroom = require('./api/routes/user/classroom');
 
 // connect database
@@ -58,6 +59,7 @@ app.use("/exercise", Exercise);
 app.use("/grade", Grade);
 app.use("/prps", Situation);
 app.use("/classroom", Classroom);
+app.use("/guild",Guild);
 
 // กรณีหา Route ไม่เจอ Set Error
 app.use((req, res, next)=>{
