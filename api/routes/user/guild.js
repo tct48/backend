@@ -19,11 +19,22 @@ router.post("/", (req, res, next) => {
   });
 });
 
+router.get("", (req,res ,ext)=>{
+  const guild = Guild.find({});
+
+  guild.then((result)=> {
+    return res.status(200).json({
+      total_items: result.length,
+      items: result
+    })
+  })
+})
+
 // ค้นหาโดย ID กลุ่ม
 router.get("/:_id", (req, res, next) => {
   const _id = req.params._id;
 
-  const guild = Guild.find({
+  const guild = Guild.findOne({
     _id: _id,
   });
 
