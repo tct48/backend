@@ -67,6 +67,7 @@ router.get("/student/:classroom", (req, res, next) => {
     class: classroom,
   })
   .select("firstname lastname phone exp")
+  .sort({exp:-1})
   user.then((result) => {
     return res.status(200).json({
       total_items: result.length,
