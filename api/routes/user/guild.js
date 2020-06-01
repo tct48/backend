@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Guild = require("../../models/user/guild");
+const User = require("../../models/user/user");
 
 // สร้าง Guild
 router.post("/", (req, res, next) => {
@@ -20,9 +21,15 @@ router.post("/", (req, res, next) => {
 });
 
 router.get("", (req,res ,ext)=>{
-  const guild = Guild.find({});
+  const classroom = req.body.classroom;
+  const guild = req.body.guild;
 
-  guild.then((result)=> {
+  const user = User.find({
+    guild: guild,
+    class: classroom
+  })
+
+  user.then((result)=>{
     return res.status(200).json({
       total_items: result.length,
       items: result
