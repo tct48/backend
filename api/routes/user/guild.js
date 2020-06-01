@@ -20,19 +20,20 @@ router.post("/", (req, res, next) => {
   });
 });
 
-router.get("/:classroom/:guild", (req,res ,ext)=>{
-  const classroom = req.params.classroom;
-  const guild = req.params.guild;
+router.get("/:userId", (req,res ,next)=>{
+  const _id = req.params.userId;
 
-  const user = User.find({
-    guild: guild,
-    class: classroom
-  })
-
-  user.then((result)=>{
-    return res.status(200).json({
-      total_items: result.length,
-      items: result
+  User.findOne({
+    _id: _id,
+  }).then((result)=>{
+    User.find({
+      class:result.class,
+      guild:result.guild
+    }).then(item=>{
+      return res.status(200).json({
+        total_items: item.length,
+        items: item
+      })
     })
   })
 })
