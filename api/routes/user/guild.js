@@ -20,9 +20,9 @@ router.post("/", (req, res, next) => {
   });
 });
 
-router.get("", (req,res ,ext)=>{
-  const classroom = req.body.classroom;
-  const guild = req.body.guild;
+router.get("/:classroom/:guild", (req,res ,ext)=>{
+  const classroom = req.params.classroom;
+  const guild = req.params.guild;
 
   const user = User.find({
     guild: guild,
