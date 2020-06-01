@@ -43,6 +43,9 @@ const schema = mongoose.Schema({
   badge: {
     type: Array,
   },
+  guild:{
+    type:String
+  },
   role: {
     type: String,
     default: "student",
