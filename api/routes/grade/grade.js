@@ -7,7 +7,7 @@ const Grade = require("../../models/grade/grade");
 // เรียกดูคะแนนทั้งหมดของนักศึกษา
 router.get("/:_id", (req, res) => {
   const _id = req.params._id;
-  Grade.findOne({ user: _id }).then(result => {
+  Grade.find({ user: _id }).then(result => {
     res.status(200).json({
       item: result
     })
