@@ -38,29 +38,13 @@ router.get("/:userId", (req,res ,next)=>{
   })
 })
 
-// ค้นหาโดย ID กลุ่ม
-router.get("/:_id", (req, res, next) => {
-  const _id = req.params._id;
+//ค้นหาด้วยห้องเรียน
+router.get("/user/:classroom", (req, res, next) => {
+  const classroom = req.params.classroom;
 
-  const guild = Guild.findOne({
-    _id: _id,
-  });
-
-  guild.then((result) => {
-    return res.status(200).json({
-      total_items: result.length,
-      items: result,
-    });
-  });
-});
-
-//ค้นหาด้วย UserID
-router.get("/user/:userId", (req, res, next) => {
-  const userId = req.params.userId;
-
-  const guild = Guild.find({
-    user: { $elemMatch: { $eq: userId } },
-  });
+  const guild = User.aggregate([
+    { $group: {_id:{guild:"$guild"}}}
+  ])
 
   guild.then((result) => {
     return res.status(200).json({
