@@ -97,6 +97,50 @@ router.patch("/:_id", (req, res, next) => {
   });
 });
 
+// อาจารย์แก้ว่าป่วย
+router.patch("sick/:_id", (req, res, next) => {
+  const _id = req.params._id;
+  const user = req.body.user;
+
+  Attendence.find({
+    _id: _id,
+    sick: { $elemMatch: { $eq: user } },
+  }).then((result) => {
+    if (result.length > 0) {
+      Attendence.update(
+        {
+          _id: _id,
+        },
+        {
+          $pop: { sick: user },
+        }
+      )
+        .exec()
+        .then(() => {
+          return res.status(200).json({
+            code: "500",
+            message: "มึงสายแล้วสายอีกขาดเรียนไปเหอะ",
+          });
+        });
+    }
+
+    Attendence.update(
+      {
+        _id: _id,
+      },
+      {
+        $push: { sick: user },
+      }
+    )
+      .exec()
+      .then(() => {
+        res.status(200).json({
+          message: "แก้ไขข้อมูลสำเร็จ",
+        });
+      });
+  });
+});
+
 // แก้สถานะการเข้าห้องเรียน
 router.patch("/switch/:_id", (req, res, next) => {
   const _id = req.params._id;
