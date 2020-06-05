@@ -98,7 +98,7 @@ router.patch("/:_id", (req, res, next) => {
 });
 
 // แก้สถานะการเข้าห้องเรียน
-router.patch("/switch/:_id", (req, res, next) => {
+router.patch("/switch/:_id/:userId", (req, res, next) => {
   const _id = req.params._id;
 
   Attendence.update(
