@@ -100,7 +100,7 @@ router.patch("/:_id", (req, res, next) => {
 // อาจารย์แก้ว่าป่วย
 router.patch("sick/:_id", (req, res, next) => {
   const _id = req.params._id;
-  const user = req.body.user;
+  const user = req.body.sick;
 
   Attendence.find({
     _id: _id,
