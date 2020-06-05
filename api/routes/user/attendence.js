@@ -98,46 +98,39 @@ router.patch("/:_id", (req, res, next) => {
 });
 
 // อาจารย์แก้ว่าป่วย
-router.patch("sick/:_id", (req, res, next) => {
+router.patch("/sick/:_id", (req, res, next) => {
   const _id = req.params._id;
   const user = req.body.sick;
+
+  console.log(user);
 
   Attendence.find({
     _id: _id,
     sick: { $elemMatch: { $eq: user } },
   }).then((result) => {
-    if (result.length > 0) {
+    console.log(result.length);
+    if (result.length == 0) {
       Attendence.update(
         {
           _id: _id,
         },
         {
-          $pop: { sick: user },
+          $push: { sick: user },
         }
       )
         .exec()
         .then(() => {
-          return res.status(200).json({
-            code: "500",
-            message: "มึงสายแล้วสายอีกขาดเรียนไปเหอะ",
+          res.status(200).json({
+            message: "แก้ไขข้อมูลสำเร็จ",
           });
         });
-    }
-
-    Attendence.update(
-      {
-        _id: _id,
-      },
-      {
-        $push: { sick: user },
-      }
-    )
-      .exec()
-      .then(() => {
-        res.status(200).json({
-          message: "แก้ไขข้อมูลสำเร็จ",
-        });
+    } else if (result.length == 1) {
+      Attendence.updateOne({ _id: _id }, { $pop: { sick: 1 } }).then(result=>{
+        return res.status(200).json({
+          message:"นำข้อมูลออก"
+        })
       });
+    }
   });
 });
 
