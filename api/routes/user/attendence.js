@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const Attendence = require("../../models/user/attendence");
 
-// สมาชิกทั้งหมด
+// สร้างวันเช็กชื่อ
 router.post("/", (req, res, next) => {
   const attendence = new Attendence({
     _id: new mongoose.Types.ObjectId(),
@@ -98,7 +98,7 @@ router.patch("/:_id", (req, res, next) => {
 });
 
 // แก้สถานะการเข้าห้องเรียน
-router.patch("/switch/:_id/:userId", (req, res, next) => {
+router.patch("/switch/:_id", (req, res, next) => {
   const _id = req.params._id;
 
   Attendence.update(
