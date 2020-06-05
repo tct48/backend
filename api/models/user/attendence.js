@@ -18,7 +18,7 @@ const schema = mongoose.Schema({
       type:Number,
       required:true,
   },
-  rate:{
+  rate_time:{
     type:Array,
   },
   sick:{
