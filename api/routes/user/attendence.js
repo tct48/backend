@@ -69,6 +69,10 @@ router.patch("/:_id", (req, res, next) => {
   const _id = req.params._id;
   const user = req.body.user;
 
+  
+  var seccond = Math.floor(Date.now()/1000);
+  var limit_time = 900; //15 minute if seccond not greater than
+
   Attendence.find({
     _id: _id,
     user: { $elemMatch: { $eq: user } },
@@ -79,21 +83,43 @@ router.patch("/:_id", (req, res, next) => {
         message: "มึงมาเรียนแล้ว",
       });
     }
-
-    Attendence.update(
-      {
-        _id: _id,
-      },
-      {
-        $push: { user: user },
-      }
-    )
-      .exec()
-      .then(() => {
-        res.status(200).json({
-          message: "ลงชื่อเข้าเรียนสำเร็จ",
+    var create_time = Math.floor(result.length/1000);
+    var decrease = seccond-create_time;
+    if(decrease<=limit_time){
+      // ทันเวลา push user
+      console.log("มาทัน")
+      Attendence.update(
+        {
+          _id: _id,
+        },
+        {
+          $push: { user: user },
+        }
+      )
+        .exec()
+        .then(() => {
+          res.status(200).json({
+            message: "ลงชื่อเข้าเรียนสำเร็จ",
+          });
         });
-      });
+    }else{
+      // เกินเวลา push มาสาย
+      console.log("สาย")
+      Attendence.update(
+        {
+          _id: _id,
+        },
+        {
+          $push: { rate: user },
+        }
+      )
+        .exec()
+        .then(() => {
+          res.status(200).json({
+            message: "มาเรียนสาย",
+          });
+        });
+    }
   });
 });
 
@@ -102,13 +128,10 @@ router.patch("/sick/:_id", (req, res, next) => {
   const _id = req.params._id;
   const user = req.body.sick;
 
-  console.log(user);
-
   Attendence.find({
     _id: _id,
     sick: { $elemMatch: { $eq: user } },
   }).then((result) => {
-    console.log(result.length);
     if (result.length == 0) {
       Attendence.update(
         {
