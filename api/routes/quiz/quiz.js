@@ -6,10 +6,21 @@ const Quiz = require("../../models/quiz/quiz");
 
 // เรียกดูข้อ ทั้งหมด ของ Chapter นั้น ๆ
 router.get("/:_id", (req, res, next) => {
-    const _id = req.params._id
-    Quiz.findOne({ ref: _id }).then((result) => {
+  const _id = req.params._id;
+  Quiz.findOne({ ref: _id }).then((result) => {
     return res.status(200).json({
       total_items: result.choice.length,
+      items: result,
+    });
+  });
+});
+
+router.get("/", (req, res, next) => {
+  const quiz = Quiz.aggregate([{$project:{name:1}}]);
+
+  quiz.then((result) => {
+    return res.status(200).json({
+      total_items: result.length,
       items: result,
     });
   });
@@ -23,15 +34,15 @@ router.post("/", (req, res, next) => {
     detail: req.body.detail,
     choice: req.body.choice,
     ref: req.body.ref,
-    created : new Date
+    created: new Date(),
   });
 
-  quiz.save().then(result=>{
+  quiz.save().then((result) => {
     res.status(200).json({
       message: "เพิ่มหน่วยการเรียนรู้เรียบร้อยแล้ว",
       data: result,
     });
-  })
+  });
 });
 
 // ลบแหล่งการเรียนรู้
