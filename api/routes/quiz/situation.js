@@ -63,6 +63,26 @@ router.get("/", (req, res, next)=>{
   })
 })
 
+// แก้ไขแหล่งการเรียนรู้
+router.patch("/:_id", (req, res, next) => {
+  const _id = req.params._id;
+
+  PrPs.update(
+    {
+      _id: _id,
+    },
+    {
+      $set: req.body,
+    }
+  )
+    .exec()
+    .then(() => {
+      res.status(200).json({
+        message: "Chapter is updated",
+      });
+    });
+});
+
 // ลบข้อมูลเข้าเรียน
 router.delete("/:_id", (req, res, next) => {
   const _id = req.params._id;
