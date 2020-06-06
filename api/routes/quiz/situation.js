@@ -39,6 +39,19 @@ router.get("/:ref", (req, res, next) => {
   });
 });
 
+router.get("/list/:_id", (req,res,next)=>{
+  const _id = req.params._id;
+
+  PrPs.findOne({
+    _id:_id
+  })
+  .then(result=>{
+    return res.status(200).json({
+      items:result
+    })
+  })
+})
+
 router.get("/", (req, res, next)=>{
   PrPs.find({},{situation:{$slice:-5}})
   .select("ref situation")
