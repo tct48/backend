@@ -39,6 +39,17 @@ router.get("/:ref", (req, res, next) => {
   });
 });
 
+router.get("/", (req, res, next)=>{
+  PrPs.find({},{situation:{$slice:-5}})
+  .select("ref situation")
+  .then(result=>{
+    return res.status(200).json({
+      total_items:result.length,
+      items: result
+    })
+  })
+})
+
 // ลบข้อมูลเข้าเรียน
 router.delete("/:_id", (req, res, next) => {
   const _id = req.params._id;
