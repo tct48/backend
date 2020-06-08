@@ -47,7 +47,7 @@ router.get("/:_id", (req, res, next) => {
     return res.status(200).json({
       total_items: result.length,
       items: result,
-    });
+    }); 
   });
 });
 
