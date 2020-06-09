@@ -34,6 +34,8 @@ router.post("/", (req, res, next) => {
     youtube: req.body.youtube,
     hypertext: req.body.hypertext,
     quiz: 0,
+    purpose:req.body.purpose,
+    learning: req.body.learning,
     created: new Date(),
   });
 

@@ -8,6 +8,8 @@ const schema = mongoose.Schema({
   hypertext: {type: Object, required: true},
   quiz: {type:Number},
   created: {type : Date},
+  purpose: {type :String},
+  learning: {type:String}
 });
 
 const Chapter = mongoose.model("Chapter", schema);
