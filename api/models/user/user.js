@@ -60,6 +60,10 @@ const schema = mongoose.Schema({
   image: {
     type: String,
   },
+  status:{
+    type:Number,//ถ้าเป็น Admin ให้เป็น 0 ก่อนยังล๊อกอินไม่ได้
+    default:1
+  }
 });
 
 const User = mongoose.model("User", schema);

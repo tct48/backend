@@ -263,8 +263,12 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
       });
     }
     var user;
-
+    
     console.log(req.body)
+
+    if(req.body.role=="admin"){
+
+    }
 
     user = new User({
       _id: new mongoose.Types.ObjectId(),
