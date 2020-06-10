@@ -105,7 +105,7 @@ router.get("/search", (req, res, next) => {
 
   var role="student";
 
-  if(valueData=="admin"){
+  if(Object.values(req.query)[3]=="admin"){
     role="admin"
   }
 
