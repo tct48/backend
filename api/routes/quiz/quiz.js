@@ -7,7 +7,8 @@ const Quiz = require("../../models/quiz/quiz");
 // เรียกดูข้อ ทั้งหมด ของ Chapter นั้น ๆ
 router.get("/:_id", (req, res, next) => {
   const _id = req.params._id;
-  Quiz.findOne({ ref: _id }).then((result) => {
+  console.log(_id)
+  Quiz.findOne({ _id: _id }).then((result) => {
     return res.status(200).json({
       total_items: result.choice.length,
       items: result,
