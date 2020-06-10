@@ -103,6 +103,12 @@ router.get("/search", (req, res, next) => {
 
   var valueData = Object.values(req.query)[2];
 
+  var role="student";
+
+  if(valueData=="admin"){
+    role="admin"
+  }
+
   const user = User.find({
     $or: [{
         firstname: {
@@ -123,7 +129,7 @@ router.get("/search", (req, res, next) => {
         },
       },
     ],
-    role: "student",
+    role: role,
   }).sort({
     firstname: 0
   });
