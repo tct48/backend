@@ -169,6 +169,26 @@ router.get("/leaderboard", (req, res, next) => {
     });
 });
 
+router.get("/leaderboard/:classroom", (req, res, next)=> {
+  var classroom = req.params.classroom;
+  console.log(classroom)
+    User.find({
+      role:"student",
+      class: classroom
+    })
+    .select("username exp badge")
+    .limit(5)
+    .sort({
+      exp: -1
+    })
+    .then(result=>{
+      return res.status(200).json({
+        total_items: result.length,
+        items: result
+      })
+    })
+})
+
 // การล๊อกอิน
 router.post("/login", (req, res, next) => {
   User.find({
