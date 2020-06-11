@@ -110,7 +110,7 @@ router.patch("/:_id", (req, res, next) => {
           _id: _id,
         },
         {
-          $push: { rate_time: user },
+          $push: { user:user,rate_time: user },
         }
       )
         .exec()
