@@ -236,7 +236,7 @@ router.post("/login", (req, res, next) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: err.message,
+        error: "ข้อมูลไม่ถูกต้อง หรือข้อมูลรอการยืนยัน",
       });
     });
 });
