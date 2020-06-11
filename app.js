@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const User = require('./api/routes/user/user');
 const Attendence = require('./api/routes/user/attendence');
 const Chapter = require('./api/routes/chapter/chapter');
+const Guide = require('./api/routes/user/guide');
 const Quiz = require('./api/routes/quiz/quiz');
 const File = require('./api/routes/file/file');
 const Exercise = require('./api/routes/exercise/exercise');
@@ -60,6 +61,7 @@ app.use("/grade", Grade);
 app.use("/prps", Situation);
 app.use("/classroom", Classroom);
 app.use("/guild",Guild);
+app.use("/guide",Guide);
 
 // กรณีหา Route ไม่เจอ Set Error
 app.use((req, res, next)=>{

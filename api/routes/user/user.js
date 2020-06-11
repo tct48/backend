@@ -109,6 +109,7 @@ router.get("/search", (req, res, next) => {
     role="admin"
   }
 
+  console.log(valueData)
   console.log(role)
   const user = User.find({
     $or: [{
@@ -135,20 +136,23 @@ router.get("/search", (req, res, next) => {
     firstname: 0
   });
 
-  user
-    .skip(Number(skip))
-    .limit(Number(lp))
-    .then((items) => {
-      return res.status(200).json({
-        total_items: items.length,
-        items: items,
+  user.then((result) => {
+    const totalItem = result.length;
+    user
+      .skip(Number(skip))
+      .limit(Number(lp))
+      .then((items) => {
+        return res.status(200).json({
+          total_items: totalItem,
+          items: items,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: err.message,
+        });
       });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        message: err.message,
-      });
-    });
+  });
 });
 
 // leaderboard only student
