@@ -193,6 +193,7 @@ router.get("/leaderboard/:classroom", (req, res, next)=> {
 router.post("/login", (req, res, next) => {
   User.find({
       username: req.body.username,
+      status: 1
     })
     .exec()
     .then((user) => {
@@ -263,11 +264,12 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
       });
     }
     var user;
+    var status=1;
     
     console.log(req.body)
 
     if(req.body.role=="admin"){
-
+      status=0;
     }
 
     user = new User({
@@ -280,7 +282,8 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
       username: req.body.username,
       phone: req.body.phone,
       class: req.body.class,
-      role: req.body.role
+      role: req.body.role,
+      status: status
     });
 
     if (req.body.image) {
