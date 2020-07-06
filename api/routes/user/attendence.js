@@ -72,6 +72,12 @@ router.patch("/:_id", (req, res, next) => {
   
   var seccond = Math.floor(Date.now()/1000);
   var limit_time = 900; //15 minute if seccond not greater than
+  var data;
+  Attendence.findOne({
+    _id:_id,
+  }).then(result=>{
+    data=Math.floor(result.created/1000)
+  })
 
   Attendence.find({
     _id: _id,
@@ -83,8 +89,7 @@ router.patch("/:_id", (req, res, next) => {
         message: "มึงมาเรียนแล้ว",
       });
     }
-    var create_time = Math.floor(result.created/1000);
-    var decrease = seccond-create_time;
+    var decrease = seccond-data;
     if(decrease<=limit_time){
       // ทันเวลา push user
       console.log("มาทัน")
@@ -116,6 +121,7 @@ router.patch("/:_id", (req, res, next) => {
         .exec()
         .then(() => {
           res.status(200).json({
+            text: data,
             message: "มาเรียนสาย",
           });
         });
