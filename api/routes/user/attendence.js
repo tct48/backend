@@ -83,7 +83,7 @@ router.patch("/:_id", (req, res, next) => {
         message: "มึงมาเรียนแล้ว",
       });
     }
-    var create_time = Math.floor(result.length/1000);
+    var create_time = Math.floor(result.created/1000);
     var decrease = seccond-create_time;
     if(decrease<=limit_time){
       // ทันเวลา push user
