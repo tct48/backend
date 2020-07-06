@@ -147,8 +147,9 @@ router.patch("/sick/:_id", (req, res, next) => {
             message: "แก้ไขข้อมูลสำเร็จ",
           });
         });
-    } else if (result.length == 1) {
+    } else if (result.length >= 1) {
       Attendence.updateOne({ _id: _id }, { $pop: { sick: 1 } }).then(result=>{
+        console.log("pop");
         return res.status(200).json({
           message:"นำข้อมูลออก"
         })
