@@ -48,7 +48,6 @@ const schema = mongoose.Schema({
   },
   role: {
     type: String,
-    default: "student",
   },
   class: {
     type: String

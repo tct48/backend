@@ -48,6 +48,11 @@ router.get("/", (req, res, next) => {
   var sp = Object.values(req.query["sp"]);
   var lp = Object.values(req.query["lp"]);
   var skip = sp * lp;
+  if(req.query["lp"].length>1){
+    lp = Number(Object.values(req.query["lp"])[0] + "" + Object.values(req.query["lp"])[1])
+  }
+
+  skip = sp*lp;
 
   const user = User.find({
     role: "student"
@@ -100,41 +105,83 @@ router.get("/search", (req, res, next) => {
   var sp = Object.values(req.query["sp"]);
   var lp = Object.values(req.query["lp"]);
   var skip = sp * lp;
+  if(req.query["lp"].length>1){
+    lp = Number(Object.values(req.query["lp"])[0] + "" + Object.values(req.query["lp"])[1])
+  }
 
   var valueData = Object.values(req.query)[2];
 
   var role="student";
+  var classroom='';
+
+  if(Object.keys(req.query).length==5){
+    if(Object.values(req.query["role"]) && Object.values(req.query)["3"]==="admin"){
+      role="admin"
+    }
+
+    if(Object.values(req.query["classroom"])){
+      classroom=Object.values(req.query)["4"]
+    }
+  }
 
   if(Object.values(req.query["role"]) && Object.values(req.query)["3"]==="admin"){
     role="admin"
   }
-
-  console.log(valueData)
-  console.log(role)
-  const user = User.find({
-    $or: [{
-        firstname: {
-          $regex: valueData,
-          $options: "ig",
+  
+  var user;
+  
+  if(req.query["classroom"]){
+    user = User.find({
+      $or: [{
+          firstname: {
+            $regex: valueData,
+            $options: "ig",
+          },
         },
-      },
-      {
-        lastname: {
-          $regex: valueData,
-          $options: "ig",
+        {
+          lastname: {
+            $regex: valueData,
+            $options: "ig",
+          },
         },
-      },
-      {
-        username: {
-          $regex: valueData,
-          $options: "ig",
+        {
+          username: {
+            $regex: valueData,
+            $options: "ig",
+          },
         },
-      },
-    ],
-    role: role,
-  }).sort({
-    firstname: 0
-  });
+      ],
+      role: role,
+      class: classroom,
+    }).sort({
+      firstname: 0
+    });
+  }else{
+    user = User.find({
+      $or: [{
+          firstname: {
+            $regex: valueData,
+            $options: "ig",
+          },
+        },
+        {
+          lastname: {
+            $regex: valueData,
+            $options: "ig",
+          },
+        },
+        {
+          username: {
+            $regex: valueData,
+            $options: "ig",
+          },
+        },
+      ],
+      role: role,
+    }).sort({
+      firstname: 0
+    });
+  }
 
   user.then((result) => {
     const totalItem = result.length;
@@ -145,6 +192,8 @@ router.get("/search", (req, res, next) => {
         return res.status(200).json({
           total_items: totalItem,
           items: items,
+          role: role,
+          classroom: classroom,
         });
       })
       .catch((err) => {
