@@ -102,13 +102,17 @@ router.get("/search", (req, res, next) => {
     });
   }
 
-  var sp = Object.values(req.query["sp"]);
-  var lp = Object.values(req.query["lp"]);
-  var skip = sp * lp;
+  var sp = Object.values(req.query["sp"])[0];
+  var lp = Object.values(req.query["lp"])[0];
+
   if(req.query["lp"].length>1){
     lp = Number(Object.values(req.query["lp"])[0] + "" + Object.values(req.query["lp"])[1])
   }
 
+  if(req.query["sp"].length>1){
+    sp = Number(Object.values(req.query["sp"])[0] + "" + Object.values(req.query["sp"])[1])
+  }
+  var skip = sp * lp;
   var valueData = Object.values(req.query)[2];
 
   var role="student";
@@ -182,6 +186,8 @@ router.get("/search", (req, res, next) => {
       firstname: 0
     });
   }
+
+  console.log(sp)
 
   user.then((result) => {
     const totalItem = result.length;
