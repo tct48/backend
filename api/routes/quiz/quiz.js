@@ -46,6 +46,7 @@ router.post("/", (req, res, next) => {
     detail: req.body.detail,
     choice: req.body.choice,
     ref: req.body.ref,
+    limit_time : req.body.limit_time,
     created: new Date(),
   });
 

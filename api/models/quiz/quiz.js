@@ -6,6 +6,7 @@ const schema = mongoose.Schema({
   detail: {type : String},
   choice : { type: Object, required: true },
   // answer -> _id, name ,score ,type
+  limit_time: {type:Number},
   ref: { type: String },
   created : {type :Date}
 });
