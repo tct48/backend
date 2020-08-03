@@ -99,8 +99,14 @@ router.delete("/:_id", (req, res, next) => {
   })
     .exec()
     .then(() => {
-      res.status(200).json({
-        message: "ลบชั้นเรียนเรียบร้อยแล้ว !",
+      User.remove({
+        class: _id,
+      })
+      .exec()
+      .then(() => {
+        res.status(200).json({
+          message: "ลบชั้นเรียนเรียบร้อยแล้ว !",
+        });
       });
     });
 });

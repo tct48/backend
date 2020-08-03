@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Chapter = require("../../models/chapter/chapter");
 const Quiz = require("../../models/quiz/quiz");
+const { request } = require("express");
 
 // เรียกดูข้อ ทั้งหมด ของ Chapter นั้น ๆ
 router.get("/:_id", (req, res, next) => {
