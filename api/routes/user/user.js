@@ -272,20 +272,20 @@ router.post("/login", (req, res, next) => {
           .then(() => {});
 
         if (result) {
-          const token = jwt.sign({
-              username: user[0].username,
-              userId: user[0]._id,
-            },
-            process.env.JWT_KEY, {
-              expiresIn: "24h",
-            }
-          );
-          accessToken = token;
+          // const token = jwt.sign({
+          //     username: user[0].username,
+          //     userId: user[0]._id,
+          //   },
+          //   process.env.JWT_KEY, {
+          //     expiresIn: "24h",
+          //   }
+          // );
+          // accessToken = token;
           return res.status(200).json({
             message: "Auth successful",
             _id: user[0]._id,
             current_user: user[0],
-            accessToken: token,
+            accessToken: "token",
           });
         }
 
