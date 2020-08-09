@@ -303,15 +303,23 @@ router.post("/login", (req, res, next) => {
 
 // getUserLogin
 router.get("/data", (req, res, next) => {
+  return res.status(200).json({
+    items: 'user'
+  })
   jwt.verify(accessToken, process.env.JWT_KEY, function (error, decodedToken) {
     const userId = decodedToken.userId;
+    console.log("He come");
     return User.findById({
         _id: userId,
       })
       .populate("academy")
       .then((UserLogin) => {
+        console.log("No Prob")
         return res.status(200).json(UserLogin);
-      });
+      })
+      .catch(err=>{
+        console.log(err)
+      })
   });
 });
 
