@@ -9,7 +9,8 @@ const schema = mongoose.Schema({
   quiz: {type:Number},
   created: {type : Date},
   purpose: {type :String},
-  learning: {type:String}
+  learning: {type:String},
+  view: {type: Boolean, default:true}
 });
 
 const Chapter = mongoose.model("Chapter", schema);

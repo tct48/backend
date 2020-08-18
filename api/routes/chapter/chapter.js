@@ -6,7 +6,7 @@ const Chapter = require("../../models/chapter/chapter");
 // เรียกดู Chapter ทั้งหมด
 router.get("/", (req, res, next) => {
   Chapter.find({})
-  .select("_id name")
+  .select("_id name view")
   .sort({ name : 0 })
   .then((result) => {
     return res.status(200).json({

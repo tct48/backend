@@ -8,7 +8,8 @@ const schema = mongoose.Schema({
   // answer -> _id, name ,score ,type
   limit_time: {type:Number},
   ref: { type: String },
-  created : {type :Date}
+  created : {type :Date},
+  view: {type: Boolean, default:true}
 });
 
 const Quiz = mongoose.model("Quiz", schema);

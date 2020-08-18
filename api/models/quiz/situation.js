@@ -6,7 +6,8 @@ const schema = mongoose.Schema({
   questions: { type: Array, required: true },
   answers: { type: Object, required: true },
   created: { type: Date, required: true },
-  ref: { type : String, required:true}
+  ref: { type : String, required:true},
+  view: {type: Boolean, default:true}
 });
 
 const PrPs = mongoose.model("PrPs", schema);
