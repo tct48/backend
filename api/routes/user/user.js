@@ -8,18 +8,6 @@ const upload = multer({
   dest: "uploads/image/user/"
 });
 const nodemailer = require("nodemailer");
-const mysql = require("mysql");
-
-var mysql_connection = mysql.createConnection({
-  host: "cloud-linux11.thaidatahosting.com",
-  user:"pblgpsco",
-  password:"JsN5;6wD0lpP+1",
-  database:"pblgpsco_database",
-  multipleStatements:true,
-})
-
-mysql_connection.timeout = 0;
-
 
 const transporter = nodemailer.createTransport({
   host: "https://backend-pblgps.herokuapp.com",
@@ -60,22 +48,30 @@ router.get("/", (req, res, next) => {
   var lp = req.query["lp"];
   var skip = sp * lp;
 
-  var sql = "SELECT * FROM user WHERE role=2 ORDER BY firstname LIMIT " + skip + "," + lp;
-  console.log(sql)
-  mysql_connection.query(sql, (err,rows, fields)=>{
-    if(!err){
-      return res.status(200).json({
-        total_items:rows.length,
-        items: rows
-      }) 
-    }else{
-      return res.status(500).json({
-        message:err.message
+
+  const user = User.find({
+    role: "student"
+  }).sort({
+    firstname: 0
+  });
+
+  user.then((result) => {
+    const totalItem = result.length;
+    user
+      .skip(Number(skip))
+      .limit(Number(lp))
+      .then((items) => {
+        return res.status(200).json({
+          total_items: totalItem,
+          items: items,
+        });
       })
-    }
-  })
-
-
+      .catch((err) => {
+        res.status(500).json({
+          message: err.message,
+        });
+      });
+  });
 });
 
 // ค้นหา by ID
@@ -249,22 +245,46 @@ router.get("/leaderboard/:classroom", (req, res, next)=> {
 
 // การล๊อกอิน success
 router.post("/login", (req, res, next) => {
-  var sql="SELECT * FROM user WHERE username='" + req.body.username + "' AND status = 1";
-  mysql_connection.query(sql, (errs, user, fields)=>{
-    bcrypt.compare(req.body.password, user[0].password, (err,result)=>{
-      if (err || errs) {
+  User.find({
+    username: req.body.username,
+    status: 1
+  })
+  .exec()
+  .then((user) => {
+    bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+      if (err) {
         return res.status(401).json({
           message: "อีเมล์ หรือพาสเวิร์ดไม่ถูกต้อง",
         });
       }
-      return res.status(200).json({
-        message: "Auth successful",
-        _id: user[0]._id,
-        current_user:user[0],
-        accessToken: "token",
-      })
-    })
+
+      User.update({
+          _id: user[0]._id,
+        }, {
+          activity: new Date(),
+        })
+        .exec()
+        .then(() => {});
+
+      if (result) {
+        return res.status(200).json({
+          message: "Auth successful",
+          _id: user[0]._id,
+          current_user: user[0],
+          accessToken: "token",
+        });
+      }
+
+      res.status(401).json({
+        message: "อีเมล์ หรือพาสเวิร์ดไม่ถูกต้อง",
+      });
+    });
   })
+  .catch((err) => {
+    res.status(500).json({
+      error: "ข้อมูลไม่ถูกต้อง หรือข้อมูลรอการยืนยัน",
+    });
+  });
 });
 
 // getUserLogin
@@ -301,29 +321,53 @@ router.post("/signup", upload.single("file"), (req, res, next) => {
     var status=1;
     
     console.log(req.body)
-    if(req.body.role=='student'){
-      req.body.role=2;
-    }else{
-      req.body.role=1;
+
+    if(req.body.role=="admin"){
+      status=0;
     }
 
-    var sql="INSERT INTO user (email, sid, password, firstname, lastname, username, phone, classroom, role, status) VALUES \
-    ('" + req.body.email + "', '" + req.body.sid + "', '" + hash + "', '" + req.body.firstname + "', '" + req.body.lastname + "', '" +  req.body.username + "', \
-    '" + req.body.phone + "', " + 0 + ", " +  req.body.role + ", " +  status +")";
+    user = new User({
+      _id: new mongoose.Types.ObjectId(),
+      email: req.body.email,
+      sid: req.body.sid,
+      password: hash,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      username: req.body.username,
+      phone: req.body.phone,
+      class: req.body.class,
+      role: req.body.role,
+      status: status
+    });
 
-    mysql_connection.query(sql, (err,rows, fields)=>{
-      if(!err){
-        return res.status(200).json({
+    if (req.body.image) {
+      user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        email: req.body.email,
+        sid: req.body.sid,
+        password: hash,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        username: req.body.username,
+        phone: req.body.phone,
+        image: req.body.image,
+        class: req.body.class
+      });
+    }
+
+    user
+      .save()
+      .then((result) => {
+        res.status(200).json({
           message: "สมัครสมาชิกเรียบร้อยแล้ว",
-          created: rows,
-        })
-      }else{
-        return res.status(500).json({
+          created: result,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
           message: err,
-        })
-      }
-    })
-    
+        });
+      });
   });
 });
 
