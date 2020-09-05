@@ -18,7 +18,7 @@ const Guild = require('./api/routes/user/guild');
 const Classroom = require('./api/routes/user/classroom');
 
 // connect database
-mongoose.connect('mongodb://ketar:d10m12y37@ds015478.mlab.com:15478/heroku_wctv7cvf', {
+mongoose.connect(process.env.MONGODB_URI, {
       useUnifiedTopology: true,
       useNewUrlParser: true
     })
